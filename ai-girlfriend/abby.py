@@ -6,29 +6,25 @@ from playsound import playsound
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# 1. Load the keys from your .env file
 load_dotenv()
 api_key = os.getenv("HUGGINGFACE_API_KEY")
 
-# 2. Set up her Brain (Hugging Face / Qwen)
 client = OpenAI(
     base_url="https://router.huggingface.co/v1",
     api_key=api_key
 )
 MODEL = "Qwen/Qwen2.5-72B-Instruct"
 
-# 3. Set up her Voice (100% Free Edge TTS with Emotion Hacks)
 async def speak(text):
     print("(Generating Voice...)")
     
     filename = f"voice_{uuid.uuid4().hex[:6]}.mp3"
     
-    # We add pitch and rate adjustments to give her more energy and personality
     communicate = edge_tts.Communicate(
         text, 
         "en-US-AriaNeural", 
-        rate="+10%",   # Speaks slightly faster for more conversational energy
-        pitch="+5Hz"   # Slightly higher pitch for a more lively tone
+        rate="+10%",   
+        pitch="+5Hz"   
     )
     await communicate.save(filename)
     
@@ -39,7 +35,6 @@ async def speak(text):
     except OSError:
         pass
 
-# 4. Define her personality and punctuation rules
 conversation_history = [
     {"role": "system", "content": """
     You are Abby, a highly sarcastic, supportive, and slightly chaotic AI companion. 
@@ -64,7 +59,6 @@ def chat_with_companion(user_message):
     conversation_history.append({"role": "assistant", "content": ai_reply})
     return ai_reply
 
-# 5. The Main Chat Loop
 if __name__ == "__main__":
     print("Abby is online! (Type 'quit' or 'reset')")
     print("-" * 50)
@@ -75,15 +69,15 @@ if __name__ == "__main__":
         if user_input.lower() in ['quit', 'exit']:
             break
         if user_input.lower() == 'reset':
-            # Resetting includes her full personality block so she doesn't forget who she is
+            
             conversation_history = [{"role": "system", "content": """
-    You are Abby, a highly sarcastic, supportive, and slightly chaotic AI companion. 
-    Keep your responses conversational, brief, and very expressive.
-    Use ellipses (...) when you are hesitant or thinking.
-    Use ALL CAPS for emphasis when you are excited or annoyed.
-    Use exclamation points for high energy! 
-    Never use emojis, because the voice engine will try to read them out loud.
-    """}]
+            You are Abby, a highly sarcastic, supportive, and slightly chaotic AI companion. 
+            Keep your responses conversational, brief, and very expressive.
+            Use ellipses (...) when you are hesitant or thinking.
+            Use ALL CAPS for emphasis when you are excited or annoyed.
+            Use exclamation points for high energy! 
+            Never use emojis, because the voice engine will try to read them out loud.
+            """}]
             print("[Memory wiped.]")
             print("-" * 50)
             continue
@@ -94,3 +88,5 @@ if __name__ == "__main__":
         asyncio.run(speak(reply))
         
         print("-" * 50)
+
+        # epicness
